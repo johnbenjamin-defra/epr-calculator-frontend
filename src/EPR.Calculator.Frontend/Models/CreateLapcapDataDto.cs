@@ -22,7 +22,6 @@ namespace EPR.Calculator.Frontend.Models
         /// <value>
         /// A collection of <see cref="LapcapDataTemplateValueDto"/> objects representing the template values for the lapcap parameters.
         /// </value>
-
         public required IEnumerable<LapcapDataTemplateValueDto> LapcapDataTemplateValues { get; set; }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace EPR.Calculator.Frontend.Models
 
         public DateTime? EffectiveTo { get; set; }
 
-        public string CreatedBy { get; set; }
+        public required string CreatedBy { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
