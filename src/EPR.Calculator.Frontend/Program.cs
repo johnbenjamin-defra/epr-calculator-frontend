@@ -2,9 +2,10 @@
 using EPR.Calculator.Frontend.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.TokenCacheProviders.Session;
 using Microsoft.Identity.Web.UI;
@@ -16,6 +17,12 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
     .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
     .AddDownstreamApi("DownstreamApi", builder.Configuration.GetSection("DownstreamApi"))
     .AddInMemoryTokenCaches().AddSessionTokenCaches().AddSessionPerUserTokenCache().AddSession();
+builder.Services.Configure<CookieAuthenticationOptions>(
+    CookieAuthenticationDefaults.AuthenticationScheme,
+    options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents(
+        downstreamScopes: builder.Configuration.GetSection("DownstreamApi").GetValue<string>("Scopes")
+        .Split(" ")));
+
 builder.Services.AddRazorPages().AddMvcOptions(options =>
 {
     var policy = new AuthorizationPolicyBuilder()
@@ -37,7 +44,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CalculatorRunNameValidator>
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.IdleTimeout = TimeSpan.FromMinutes(builder.Configuration.GetValue<int>("SessionTimeOut"));
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
