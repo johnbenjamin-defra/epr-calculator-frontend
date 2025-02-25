@@ -33,7 +33,7 @@ variables:
   - name: projectFolder
     value: EPR.Calculator.Frontend
   - name: testProjectFolder
-    value: EPR.Calculator.Frontend/EPR.Calculator.Frontend.UnitTests
+    value: EPR.Calculator.Frontend.UnitTests
   - name: sonarQubeProjectKey
     value: epr-calculator-frontend
   - name: sonarQubeProjectName
